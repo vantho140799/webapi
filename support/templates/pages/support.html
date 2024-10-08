@@ -1,0 +1,140 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Product Landing Page{% endblock %}
+
+{% block content %}
+<style>
+.faq a {
+    color: green;
+    text-decoration: none;
+    font-weight: bold;
+}
+.faq h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-top: 20px;
+}
+
+.faq p {
+    font-size: 1rem;
+    color: #555;
+    margin: 10px 0;
+}
+.faq a:hover {
+    text-decoration: underline;
+}
+
+.contact {
+    margin-top: 40px;
+}
+
+.contact h2 {
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.contact form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact form input,
+.contact form textarea {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.contact form button {
+    padding: 10px 20px;
+    border: none;
+    background-color: green;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.contact form button:hover {
+    background-color: darkgreen;
+}
+hr {
+    border: none;
+    height: 2px; /* Độ dày của đường kẻ */
+    background-color: transparent; /* Màu nền trong suốt */
+    border-top: 3px dashed #000; /* Đường kẻ kiểu gạch */
+    margin: 20px 0;
+}
+</style>
+<body>
+
+    <div class="container">
+        <h1 style="color: black; text-align: center;">Support</h1>
+        <h2 style="color: black; text-align: center;">FAQ</h2>
+
+        <section class="faq">
+            <h3>Where can I download coloring pages for free?</h3>
+            <p>We are no longer offering any free coloring pages.</p>
+
+            <h3>Where can I download my digital edition?</h3>
+            <p>If you made a purchase on Amazon, use the link below:</p>
+            <a href="#">Download My Purchase from Amazon</a>
+
+            <p>If you made a purchase on Etsy (2017-2018), use the link below:</p>
+            <a href="#">Download My Purchase from Etsy</a>
+
+            <p>If you made a purchase on Etsy (2022-present), download the corresponding PDF from Etsy:</p>
+            <a href="#">View Orders on Etsy</a>
+
+            <p>If you made a purchase on Lulu, download the digital edition from Lulu's website:</p>
+            <a href="#">Download My Purchase from Lulu</a>
+
+            <h3>I have a problem with my purchase on Etsy. Where can I get help?</h3>
+            <p>Contact Etsy for help with your order:</p>
+            <a href="#">View Orders on Etsy</a>
+
+            <h3>I have a problem with a book purchased on Amazon. Where can I get a replacement/refund?</h3>
+            <p>Contact Amazon for any concerns:</p>
+            <a href="#">View Orders on Amazon</a>
+
+            <h3>I have a problem with a book purchased on Lulu. Where can I get a replacement/refund?</h3>
+            <p>Contact Lulu for concerns:</p>
+            <a href="#">Lulu Customer Support</a>
+
+            <h3>I am having trouble working with files on my smartphone or tablet. Where can I learn how this works?</h3>
+            <p>See below for two videos:</p>
+            <a href="#">Apple iPhone and iPad</a>
+            <a href="#">Android Devices</a>
+
+            <h3>Do your digital editions work with coloring apps?</h3>
+            <p>It depends. If the app does not support PDFs, try taking a screenshot and saving it as JPG/PNG.</p>
+
+            <h3>I want to purchase digital editions, but do not have a printer. Is there an affordable one you recommend?</h3>
+            <p>No, but you can browse bestselling printers on Amazon:</p>
+            <a href="#">View Best Selling Printers on Amazon</a>
+
+            <h3>Do you offer tech support for my computer, printer, or other devices?</h3>
+            <p>No, check YouTube for videos specific to your device or problem.</p>
+        </section>
+        <hr>
+        <section class="contact">
+            <h2>Contact</h2>
+            <p style="text-align: center;">Have a question or concern? Use the form below or <a style="color: green;text-decoration: none;font-weight: bold;" href="mailto:support@fritzenpublishing.com">support@fritzenpublishing.com</a>.</p>
+            <p style="text-align: center;">You can expect a response in one business day. Thank you for your patience.</p>
+            <form action="{% url 'support_page' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <textarea name="message" rows="5" placeholder="Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </div>
+
+</body>
+{% endblock %}

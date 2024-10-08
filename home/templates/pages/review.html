@@ -1,0 +1,53 @@
+{% extends 'pages/base.html' %}
+
+{% block content %}
+<style>
+    .reviews-container {
+        margin-top: 30px;
+        text-align: left;
+    }
+
+    .reviews-container h1 {
+        font-size: 50px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        color: black;
+    }
+
+    .reviews-container p {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .review-list {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .review-item {
+        font-size: 16px;
+        margin: 10px 0;
+    }
+
+    .review-item a {
+        color: #20c997;
+        text-decoration: none;
+    }
+
+    .review-item a:hover {
+        text-decoration: underline;
+    }
+</style>
+<div class="reviews-container">
+    <h1>Reviews</h1>
+    <h5 style="color: black;">Please select a book to leave your Amazon rating or review:</h5>
+    <ul class="review-list">
+        {% for review in reviews %}
+        <li class="review-item">
+            <a href="{{ review.amazon_link }}" target="_blank">{{ review.product_name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

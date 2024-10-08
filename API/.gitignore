@@ -1,0 +1,27 @@
+# Bỏ qua tệp .env để bảo mật thông tin nhạy cảm
+.env
+
+# Thư mục hệ điều hành
+.DS_Store
+
+# Bỏ qua thư mục ảo của Python
+venv/
+__pycache__/
+
+# Bỏ qua các file liên quan tới database SQLite
+db.sqlite3
+
+# Tệp/Thư mục di động của hệ thống
+*.log
+*.pot
+*.pyc
+*.pyo
+*.so
+*.swp
+*.bak
+*.tmp
+*.dist-info
+
+# Bỏ qua các tệp được tạo bởi IDE
+.idea/
+.vscode/

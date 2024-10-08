@@ -1,0 +1,45 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Account Information{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center; color: #4A90E2;">Account Information</h1>
+<!-- <p><strong>Username:</strong> <span id="username">{{ username }}</span></p>
+<p><strong>Email:</strong> <span id="email">{{ email }}</span></p> -->
+<p><strong>Token:</strong> <span id="token"></span></p>
+<!-- <a href="/login/" style="color: #FF5733; text-decoration: none;">Logout</a> -->
+
+<h2 style="color: #333; margin-top: 30px;">API Usage Policy</h2>
+<p>The following guidelines are designed to ensure the security and proper use of your API token:</p>
+<ul>
+    <li>
+        <strong>Login:</strong> Users must log in to obtain a token. The token is a unique identifier that allows you to access various services securely. Ensure that your credentials are kept private and secure to avoid unauthorized access.
+    </li>
+    <li>
+        <strong>Security:</strong> Do not share your token with anyone, including friends or family. Your token acts like a password, granting access to your account and data. If you believe your token has been compromised, please regenerate it immediately.
+    </li>
+    <li>
+        <strong>Expiration:</strong> The token will expire after 30 minutes of inactivity. After expiration, you will need to log in again to obtain a new token. Regularly check for token validity to ensure uninterrupted access to services.
+    </li>
+    <li>
+        <strong>Access Rights:</strong> The token is only valid for legitimate API requests. Using the token for unauthorized actions or requests may result in suspension or termination of your account. Make sure to review the API documentation for appropriate usage.
+    </li>
+    <li>
+        <strong>Rate Limiting:</strong> To maintain the quality of service, API requests are subject to rate limits. Exceeding these limits may result in temporary suspension of access. Please refer to the API documentation for details on rate limits and best practices for efficient usage.
+    </li>
+    <li>
+        <strong>Data Privacy:</strong> Any personal data accessed through the API is subject to our privacy policy. Ensure that you comply with data protection regulations and do not misuse any information obtained via the API.
+    </li>
+    <li>
+        <strong>Support Contact:</strong> If you encounter issues or have questions regarding the API, please contact support via email. Our support team is available to assist you with any queries or concerns you may have.
+    </li>
+</ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get token from localStorage
+        const token = localStorage.getItem('authToken'); 
+        document.getElementById('token').textContent = token || 'N/A'; // Display token
+    });
+</script>
+{% endblock %}

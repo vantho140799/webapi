@@ -1,0 +1,338 @@
+{% extends 'pages/base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f9f9f9;
+    }
+
+    /* .product-detail {
+    padding: 40px;
+    text-align: left;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 80%;
+} */
+
+
+    /* Existing styles */
+    .product-display {
+        display: flex;
+        margin-bottom: 20px;
+        justify-content: space-around;
+    }
+
+    .product-image {
+        margin-right: 30px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .product-info {
+        max-width: 600px;
+    }
+
+    @media (max-width: 768px) {
+        .product-display {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product-image {
+            margin-right: 0;
+            margin-bottom: 20px;
+        }
+    }
+
+    .product-info h1 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        color: #333;
+        text-align: center;
+    }
+
+    .product-info p {
+        font-size: 1rem;
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .purchase-section {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn-container {
+        margin-bottom: 15px;
+    }
+
+    .purchase-btn {
+        display: block;
+        padding: 15px 30px;
+        margin: 10px auto;
+        border-radius: 50px;
+        text-decoration: none;
+        font-size: 16px;
+        color: white;
+        font-weight: bold;
+        width: 350px;
+    }
+
+    .amazon-btn {
+        background-color: #00a651;
+    }
+
+    .lulu-btn {
+        background-color: #00a651;
+    }
+
+    .review-text {
+        font-size: 14px;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        color: black;
+    }
+
+    .rating-link {
+        font-size: 14px;
+        color: #00a651;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .rating-link:hover {
+        text-decoration: underline;
+    }
+
+    .image-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .image-item {
+        flex: 0 1 calc(20% - 20px);
+        margin: 10px;
+        box-sizing: border-box;
+    }
+
+    .image-item img {
+        transition: transform 0.3s ease;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .image-item:hover img {
+        transform: scale(1.1);
+    }
+
+
+    @media (max-width: 1200px) {
+        .image-item {
+            flex: 0 1 calc(25% - 20px);
+        }
+    }
+
+    @media (max-width: 992px) {
+        .image-item {
+            flex: 0 1 calc(33.33% - 20px);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .image-item {
+            flex: 0 1 calc(50% - 20px);
+        }
+
+    }
+
+    @media (max-width: 576px) {
+        .image-item {
+            flex: 0 1 calc(100% - 20px);
+        }
+    }
+
+    .description {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .new {
+        margin: 40px 0;
+    }
+
+    .new h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .similar-pricing-plans {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 20px;
+    }
+
+    .similar-pricing-item {
+        background: #fff;
+        border: 1px solid #e1e1e1;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 200px;
+        /* Default width for larger screens */
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+        overflow: hidden;
+    }
+
+    .similar-pricing-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .similar-pricing-item img {
+        width: 100%;
+        height: auto;
+    }
+
+    .similar-pricing-item h3 {
+        font-size: 18px;
+        margin: 10px 0;
+        color: #444;
+    }
+
+    .similar-pricing-item p {
+        font-size: 14px;
+        color: #777;
+    }
+
+    /* Media queries for smaller screens */
+    @media (max-width: 768px) {
+        .similar-pricing-item {
+            width: calc(50% - 20px);
+            /* 2 items per row on small screens */
+        }
+    }
+
+    @media (max-width: 576px) {
+        .similar-pricing-item {
+            width: calc(50% - 10px);
+            /* 1 item per row on extra small screens */
+        }
+    }
+</style>
+
+<section class="product-detail">
+    <div class="product-display">
+        <div class="product-image">
+            <img id="product-image" src="/static/pictures/{{ pricing_plan.image }}" alt="Product Image">
+        </div>
+        <div class="product-info">
+            <h1 id="product-name">{{ pricing_plan.plan_name }}</h1>
+            <div id="product-description" class="description">
+                {{ pricing_plan.description }}
+            </div>
+            <hr style="margin-top: 50px;">
+            <section class="purchase-section">
+                <div class="btn-container">
+                    <a href="https://www.amazon.com" class="purchase-btn amazon-btn">Buy Paperback on Amazon</a>
+                    <a href="https://www.lulu.com" class="purchase-btn lulu-btn">View Digital Edition on Lulu</a>
+                </div>
+                <p class="review-text">
+                    <strong>Already own this book?</strong> We would appreciate an honest Amazon rating or review.
+                </p>
+                <a href="https://www.amazon.com/review" class="rating-link">Post My Rating on Amazon</a>
+            </section>
+            <hr style="margin-top: 50px; margin-bottom: 20px;">
+        </div>
+    </div>
+    <div class="image-gallery">
+        {% for image in images %}
+        <div class="image-item" data-id="{{ pricing_plan.id }}" data-name="{{ pricing_plan.plan_name }}"
+            onclick="viewImage(this)">
+            <img src="/static/pictures/{{ folder_path }}/{{ image }}" alt="Product Image">
+        </div>
+        {% empty %}
+        <p>No images available for this product.</p>
+        {% endfor %}
+    </div>
+    <hr style="margin-top: 50px;">
+    <div class="new">
+        <h2>Newest Coloring Books</h2>
+        <div class="similar-pricing-plans">
+            {% for similar_pricing in similar_pricing_plans %}
+            <div class="similar-pricing-item">
+                <a href="/product/{{ similar_pricing.id }}">
+                    <img src="/static/pictures/{{ similar_pricing.image }}" alt="">
+                </a>
+            </div>
+            {% empty %}
+            <p>No similar pricing plans available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</section>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParts = window.location.pathname.split('/');
+        const pricingId = urlParts[urlParts.length - 2]; // Lấy ID pricing từ URL
+
+        async function fetchPricingPlan() {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/pricing/${pricingId}/`); // Lấy pricing plan cụ thể
+                if (!response.ok) throw new Error('Network response was not ok');
+                const pricingPlan = await response.json();
+                displayPricingPlan(pricingPlan);
+            } catch (error) {
+                console.error('Error fetching pricing plan:', error);
+            }
+        }
+
+        function displayPricingPlan(pricingPlan) {
+            document.getElementById('product-name').textContent = pricingPlan.plan_name;
+            document.getElementById('product-description').textContent = pricingPlan.description;
+            document.getElementById('price-value').textContent = `$${pricingPlan.price}`;
+
+            const fullImageUrl = pricingPlan.image; // Giả sử đây là URL đầy đủ
+            const relativeImagePath = fullImageUrl.replace('http://127.0.0.1:8000/media/', ''); // Bỏ phần tiền tố
+            document.getElementById('product-image').src = `/media/${relativeImagePath}` || 'default_image_url.jpg';
+
+            const reviewsList = document.getElementById('reviews-list');
+            reviewsList.innerHTML = ''; // Xóa danh sách cũ
+            pricingPlan.reviews.forEach(review => {
+                reviewsList.innerHTML += `
+            <div class="review-item">
+                <strong>${review.customer_name}</strong>
+                <p>${review.comment}</p>
+            </div>
+        `;
+            });
+        }
+
+        fetchPricingPlan();
+
+    });
+</script>
+<script>
+    function viewImage(element) {
+        const pricingId = element.getAttribute('data-id');
+        const imageName = element.querySelector('img').src.split('/').pop();
+
+        window.location.href = `/photo-viewer/?image=${imageName}&id=${pricingId}`;
+    }
+</script>
+{% endblock %}

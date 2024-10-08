@@ -1,0 +1,260 @@
+<style>
+    .image-viewer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px auto;
+        max-width: 90%;
+        padding: 10px;
+    }
+
+    .large-image img {
+        max-width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-thumbnails {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .thumbnails {
+        display: flex;
+        justify-content: center;
+        overflow-x: auto;
+        max-width: 100%;
+        gap: 10px;
+        padding: 10px 0;
+        scroll-snap-type: x mandatory;
+    }
+
+    .thumbnails img {
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+        scroll-snap-align: center;
+    }
+
+    .thumbnails img:hover {
+        transform: scale(1.1);
+        border: 2px solid #007bff;
+    }
+
+    .prev,
+    .next {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin: 0 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .prev:hover,
+    .next:hover {
+        background-color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+        .large-image img {
+            max-height: 300px;
+        }
+
+        .thumbnails img {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .close,
+    .maximize {
+        background-color: #007bff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        color: white;
+        margin-left: 10px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .close:hover,
+    .maximize:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+        .button-container {
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .close,
+        .maximize {
+            margin: 5px 0;
+            width: 100%;
+        }
+
+        .close {
+            background-color: #dc3545;
+        }
+    }
+</style>
+
+<div class="image-viewer">
+    <div class="button-container">
+        <button class="close" onclick="closeViewer()">&#10005; Close</button>
+        <button class="maximize" onclick="toggleFullscreen()">&#10000; Fullscreen</button>
+    </div>
+
+    <div class="large-image">
+        <img id="currentImage" src="{{ current_image }}" alt="Large Image">
+    </div>
+
+    <div class="image-thumbnails">
+        <button class="prev" onclick="prevImage()">&#10094;</button>
+        <div class="thumbnails">
+            {% for image in images %}
+            <a href="javascript:void(0);" data-id="{{ pricing_id }}" onclick="viewImage(this)">
+                <img src="{{ image }}" alt="Thumbnail">
+            </a>
+            {% endfor %}
+        </div>
+        <button class="next" onclick="nextImage()">&#10095;</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageName = urlParams.get('image');
+        const pricingId = urlParams.get('id');
+
+        const defaultImage = '/static/pictures/default.jpg';
+
+        const images = JSON.parse('{{ images|safe }}');
+        const folderPath = '{{ folder_path }}';
+
+        function setCurrentImage(image) {
+            document.getElementById('currentImage').src = `${folderPath}${image}`;
+        }
+
+        function displayImages(images) {
+            const imagesContainer = document.querySelector('.thumbnails');
+            imagesContainer.innerHTML = '';
+
+            images.forEach((image) => {
+                imagesContainer.innerHTML += `
+                    <img src="${image}" onclick="changeImage('${image}')" alt="Thumbnail">
+                `;
+            });
+
+            if (imageName && images.includes(imageName)) {
+                setCurrentImage(imageName);
+            } else if (images.length > 0) {
+                setCurrentImage(images[0]);
+            } else {
+                document.getElementById('currentImage').src = defaultImage;
+            }
+        }
+
+        displayImages(images);
+    });
+
+    function changeImage(image) {
+        const folderPath = '{{ folder_path }}';
+        const newImageUrl = `${folderPath}${image}`;
+        console.log(`Đường dẫn hình ảnh mới: ${newImageUrl}`);
+        document.getElementById('currentImage').src = newImageUrl;
+
+        // Cập nhật URL mà không làm mới trang
+        const newUrl = `?image=${encodeURIComponent(image)}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    }
+
+    function prevImage() {
+        const thumbnails = document.querySelectorAll('.thumbnails img');
+        let currentImageSrc = document.getElementById('currentImage').src;
+        console.log(`Hình hiện tại: ${currentImageSrc}`);
+        // Tìm chỉ số của hình ảnh hiện tại
+        let currentIndex = Array.from(thumbnails).findIndex(img => img.src === currentImageSrc);
+
+        // Chuyển về hình trước nếu không phải hình đầu tiên
+        if (currentIndex > 0) {
+            currentIndex--;
+            const newImage = thumbnails[currentIndex].src.split('/').pop(); // Lấy tên hình mới
+            changeImage(newImage);
+        }
+    }
+
+    function nextImage() {
+        const thumbnails = document.querySelectorAll('.thumbnails img');
+        let currentImageSrc = document.getElementById('currentImage').src;
+
+        // Tìm chỉ số của hình ảnh hiện tại
+        let currentIndex = Array.from(thumbnails).findIndex(img => img.src === currentImageSrc);
+
+        // Chuyển về hình tiếp theo nếu không phải hình cuối cùng
+        if (currentIndex < thumbnails.length - 1) {
+            currentIndex++;
+            const newImage = thumbnails[currentIndex].src.split('/').pop(); // Lấy tên hình mới
+            changeImage(newImage);
+        }
+    }
+</script>
+<script>
+    function viewImage(element) {
+        // Get the current URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentId = urlParams.get('id'); // Get the current pricing ID from the URL
+
+        const imageName = element.querySelector('img').src.split('/').pop(); // Get the image name
+
+        // Update the URL with the selected image name while retaining the existing ID
+        window.location.href = `/photo-viewer/?image=${encodeURIComponent(imageName)}&id=${encodeURIComponent(currentId)}`;
+    }
+</script>
+<script>
+    function closeViewer() {
+        // Get the current URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentId = urlParams.get('id'); // Get the current product ID from the URL
+
+        // Redirect to the product detail page for the current product
+        if (currentId) {
+            window.location.href = `/product/${currentId}`; // Redirect to /product/id
+        } else {
+            window.location.href = '/product'; // Fallback if no ID is found
+        }
+    }
+
+    function toggleFullscreen() {
+        const elem = document.documentElement; // Get the document element
+        if (document.fullscreenElement) {
+            document.exitFullscreen(); // Exit fullscreen if already in fullscreen mode
+        } else {
+            elem.requestFullscreen(); // Request fullscreen
+        }
+    }
+
+    // Rest of your existing JavaScript code...
+</script>

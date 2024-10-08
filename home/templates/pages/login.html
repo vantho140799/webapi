@@ -1,0 +1,60 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header text-center bg-success text-white">
+                        <h3 style="font-weight: bold; color: aliceblue;">Login</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="login-form">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username:</label>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password:</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-success" onclick="login()">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center">
+                        <p class="text-muted">Don't have an account? <a href="/register/" class="text-success">Sign up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/api/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                    console.log('Token:', data.token); 
+                    localStorage.setItem('authToken', data.token); 
+                    window.location.href = '/'; 
+                } else {
+                    alert('Login failed'); 
+                }
+            });
+        }
+    </script>
+{% endblock %}

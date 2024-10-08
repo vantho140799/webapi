@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8faf8;
+            color: #333;
+        }
+
+        header {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            background-color: #00aa6c;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            color: #ffffff !important;
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            font-size: 1.1rem;
+            padding: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #f8f8f8;
+        }
+
+        .menu-item-has-children {
+            position: relative;
+        }
+
+        .sub-menu {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 99;
+            list-style-type: none;
+            white-space: nowrap;
+        }
+
+        .menu-item-has-children:hover .sub-menu {
+            display: block;
+        }
+
+        .sub-menu li {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .menu-item a {
+            color: #333;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-item a:hover {
+            background-color: #08cbfc;
+            color: #fff;
+        }
+
+        .menu-item-has-children>.sub-menu {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            white-space: nowrap;
+        }
+
+        .menu-item-has-children:hover>.sub-menu,
+        .menu-item-has-children.active>.sub-menu {
+            display: block;
+        }
+
+        /* Thêm CSS cho mũi tên */
+        .menu-item-has-children>a::after {
+            content: ' ▼';
+            font-size: 0.8rem;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item-has-children.active>a::after {
+            content: ' ▲';
+            /* Mũi tên chỉ lên khi mở menu */
+        }
+
+        @media (max-width: 768px) {
+            .menu-item-has-children>.sub-menu {
+                position: relative;
+                left: 0;
+                top: 0;
+                display: none;
+                white-space: normal;
+            }
+
+            .menu-item-has-children.active>.sub-menu {
+                display: block;
+            }
+        }
+
+        main {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #00aa6c;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 40px 0;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        footer h4 {
+            font-size: 1.2rem;
+            color: #00aa6c;
+            margin-bottom: 20px;
+        }
+
+        footer ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        footer ul li a {
+            color: #fff;
+            transition: color 0.3s ease;
+            text-decoration: none;
+        }
+
+        footer ul li a:hover {
+            color: #00aa6c;
+        }
+
+        .footer-bottom {
+            padding: 10px;
+            background-color: #444;
+            font-size: 13px;
+        }
+
+        /* Button Styles */
+        .btn {
+            background-color: #00aa6c;
+            color: white;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #007d52;
+            /* Màu đậm hơn khi hover */
+        }
+
+        /* Form Elements */
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            border-color: #00aa6c;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-nav {
+                text-align: center;
+            }
+
+            .navbar-nav .nav-item {
+                margin-bottom: 10px;
+            }
+
+            .footer-bottom {
+                font-size: 12px;
+            }
+
+            main {
+                padding: 20px;
+            }
+        }
+
+        /* Background cho các phần light */
+        .bg-light {
+            background-color: #00aa6c;
+            color: #fff;
+        }
+        #scrollToTopBtn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    display: none;
+    padding: 10px 15px;
+    font-size: 18px;
+    border-radius: 30%;
+    background-color: #00aa6c;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+#scrollToTopBtn:hover {
+    background-color: #007d52;
+}
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Căn giữa các mục trong menu */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+/* Kiểu dáng cho dropdown */
+.dropdown-menu {
+    display: none; /* Ẩn dropdown mặc định */
+    position: absolute; /* Đặt vị trí của dropdown */
+    top: 100%; /* Đẩy xuống dưới item cha */
+    right: 0; /* Căn phải */
+    background-color: white; /* Màu nền cho dropdown */
+    border: 1px solid #ddd; /* Đường viền */
+    border-radius: 5px; /* Bo góc */
+    z-index: 1000; /* Đảm bảo dropdown nằm trên các phần tử khác */
+}
+
+/* Hiển thị dropdown khi hover hoặc click */
+.dropdown.show .dropdown-menu {
+    display: block; /* Hiển thị dropdown */
+}
+
+/* Kiểu dáng cho item trong dropdown */
+.dropdown-item {
+    padding: 10px 15px; /* Padding cho item */
+    color: #333; /* Màu chữ */
+    text-decoration: none; /* Bỏ gạch chân */
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1; /* Màu nền khi hover */
+}
+
+/* Căn chỉnh cho nav-item */
+#auth-link {
+    position: relative; /* Cần cho dropdown-menu */
+    /* margin-left: auto;  */
+}
+    </style>
+    {% block extra_styles %}{% endblock %}
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light  container">
+            <a href="/" class="navbar-brand logo" style="font-weight: bold;">ATCECOM</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto" style="font-weight: bold;">
+                    <li class="nav-item dropdown">
+                        <a href="{% url 'index' %}" class="nav-link dropdown-toggle" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Books <span class="dropdown-menu-toggle"></span>
+                        </a>
+                        <ul id="category-menu" class="dropdown-menu">
+                            <!-- Categories will be loaded here via JavaScript -->
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="https://www.amazon.com/" class="nav-link">Amazon</a></li>
+                    <li class="nav-item"><a href="#email" class="nav-link">Email</a></li>
+                    <li class="nav-item"><a href="/social/" class="nav-link">Social</a></li>
+                    <li class="nav-item"><a href="/support/" class="nav-link">Support</a></li>
+                    <li class="nav-item dropdown" id="auth-link">
+                        <a href="/login/" class="nav-link rounded-circle" id="auth-toggle">Login</a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item" id="account-info">Account Info</a>
+                            <a href="/login/" class="dropdown-item">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="main-nav">
+        <ul id="menu-header-secondary-menu" class=" secondary-menu sf-menu"
+            style="background-color: #ebc726;text-align: center; color: #fff;list-style-type: none;padding-left: 0;">
+            <li id="menu-item-62412" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-62412">
+                <a href="/reviews/"><strong>Review My Coloring Books on Amazon</strong></a>
+            </li>
+        </ul>
+    </div>
+    <main class="container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-dark text-white mt-5">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md">
+                    <h4 class="text-success">Paperbacks</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Shop on Amazon</a></li>
+                    </ul>
+                </div>
+                <div class="col-md">
+                    <h4 class="text-success">Digital Editions</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Shop on Etsy</a></li>
+                        <li><a href="#" class="text-white">Shop on Lulu</a></li>
+                        <li><a href="#" class="text-white">View Purchases on Etsy</a></li>
+                        <li><a href="#" class="text-white">View Purchases on Lulu</a></li>
+                        <li><a href="#" class="text-white">Download My Purchase</a></li>
+                    </ul>
+                </div>
+                <div class="col-md">
+                    <h4 class="text-success">Email & Social</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Email List</a></li>
+                        <li><a href="#" class="text-white">Facebook</a></li>
+                        <li><a href="#" class="text-white">Instagram</a></li>
+                        <li><a href="#" class="text-white">Pinterest</a></li>
+                        <li><a href="#" class="text-white">YouTube</a></li>
+                    </ul>
+                </div>
+                <div class="col-md">
+                    <h4 class="text-success">Support</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-white">View our FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md">
+                    <h4 class="text-success">Legal</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Community Guidelines</a></li>
+                        <li><a href="#" class="text-white">License Agreement</a></li>
+                        <li><a href="#" class="text-white">Return Policy</a></li>
+                        <li><a href="#" class="text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-white">Terms and Conditions</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom bg-success text-center">
+            <p>&copy; 2024 Fritzen Publishing LLC. All rights reserved. Jade Summer® is registered in the U.S. Patent
+                and Trademark Office.</p>
+        </div>
+    </footer>
+    <button id="scrollToTopBtn" class="btn btn-success" style="position: fixed; bottom: 40px; right: 40px; display: none;">
+        ↑
+    </button>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.querySelector('.dropdown-item[href="/login/"]').addEventListener('click', function() {
+    localStorage.removeItem('authToken');  // Xóa token khi đăng xuất
+});
+        document.addEventListener("DOMContentLoaded", function () {
+    const authLink = document.getElementById("auth-link");
+    const authToggle = document.getElementById("auth-toggle");
+    const token = localStorage.getItem('authToken');
+    const accountInfoLink = document.getElementById("account-info");
+
+    // Kiểm tra xem người dùng đã đăng nhập hay chưa
+    if (token) {
+        authToggle.textContent = "Account"; // Đổi tên hiển thị thành "Account"
+        
+        // Thiết lập liên kết cho thông tin tài khoản
+        accountInfoLink.textContent = "Account Information"; // Cập nhật tên người dùng thực tế
+        accountInfoLink.href = "/account/"; // Thiết lập href cho liên kết
+
+        // Mở dropdown khi nhấn vào
+        authToggle.addEventListener("click", function (event) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
+            authLink.classList.toggle("show"); // Chuyển đổi lớp show
+        });
+    } else {
+        authToggle.textContent = "Login"; // Đổi tên hiển thị thành "Login"
+
+        // Mở dropdown khi nhấn vào (có thể chỉ hiển thị login)
+        authToggle.addEventListener("click", function (event) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
+            authLink.classList.toggle("show"); // Chuyển đổi lớp show
+        });
+    }
+
+    // Đóng dropdown khi nhấn ra ngoài
+    document.addEventListener("click", function (event) {
+        if (!authLink.contains(event.target)) {
+            authLink.classList.remove("show"); // Xóa lớp show
+        }
+    });
+});
+
+        document.addEventListener('DOMContentLoaded', function () {
+            async function fetchCategories() {
+                const response = await fetch('http://127.0.0.1:8000/api/categories/');
+                let categories = await response.json();
+
+                // Lọc các category có id từ 1 đến 4
+                categories = categories.filter(category => category.id >= 1 && category.id <= 4);
+
+                const categoryMenu = document.getElementById('category-menu');
+
+                categories.forEach(category => {
+                    // Tạo phần tử li cho category chính
+                    const li = document.createElement('li');
+                    li.classList.add('menu-item', 'menu-item-type-custom', 'menu-item-object-custom', 'menu-item-has-children');
+                    li.innerHTML = `
+                <a href="#">${category.name}<span role="presentation" class="dropdown-menu-toggle"></span></a>
+                <ul class="sub-menu">
+                </ul>
+            `;
+
+                    // Tạo các li cho subcategory
+                    const subMenu = li.querySelector('.sub-menu');
+                    category.subcategories.forEach(sub => {
+                        const subLi = document.createElement('li');
+                        subLi.classList.add('menu-item', 'menu-item-type-post_type', 'menu-item-object-page');
+                        subLi.innerHTML = `<a href="#">${sub.name}</a>`;//<a href="/category/${sub.id}/">${sub.name}</a>
+                        subMenu.appendChild(subLi);
+                    });
+
+                    // Thêm category vào menu
+                    categoryMenu.appendChild(li);
+                });
+            }
+
+            fetchCategories();
+        });
+    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+    window.addEventListener('scroll', function () {
+        if (window.pageYOffset > 300) {
+            scrollToTopBtn.style.display = 'block';
+        } else {
+            scrollToTopBtn.style.display = 'none';
+        }
+    });
+
+    scrollToTopBtn.addEventListener('click', function () {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'  // Cuộn mượt mà
+        });
+    });
+});
+
+</script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>
