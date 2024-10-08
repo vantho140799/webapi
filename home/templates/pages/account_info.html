@@ -37,9 +37,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Get token from localStorage
+        // Lấy token từ localStorage
         const token = localStorage.getItem('authToken'); 
-        document.getElementById('token').textContent = token || 'N/A'; // Display token
+
+        // Kiểm tra và loại bỏ chữ "Bearer" nếu có
+        const displayToken = token && token.startsWith('Bearer ') ? token.slice(7) : token; 
+
+        // Hiển thị token trên trang
+        document.getElementById('token').textContent = displayToken || 'N/A'; // Nếu không có token, hiển thị 'N/A'
     });
 </script>
 {% endblock %}

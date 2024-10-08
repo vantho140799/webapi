@@ -1,9 +1,10 @@
 import base64
 import json
 import os
+from django.http import JsonResponse
 from django.views import View
 from rest_framework import viewsets
-from .models import Category, Item, Feature, PricingPlan, PricingPlanFolder, Review
+from .models import Category, EmailSubscription, Item, Feature, PricingPlan, PricingPlanFolder, Review
 from .serializers import CategorySerializer, ItemSerializer, FeatureSerializer, PricingPlanSerializer, ReviewSerializer
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.authtoken.models import Token
@@ -20,6 +21,8 @@ from django.views.generic import TemplateView
 from rest_framework.decorators import action
 from rest_framework import status
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.mail import send_mail
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
@@ -76,7 +79,7 @@ class ProductDetailView(APIView):
 
     def get(self, request, pricing_id):
         pricing_plan = get_object_or_404(PricingPlan, id=pricing_id)
-        item = pricing_plan.item
+        # item = pricing_plan.item
 
         # Lấy các pricing plan cùng category
         similar_pricing_plans = PricingPlan.objects.filter(category=pricing_plan.category).exclude(id=pricing_id)
@@ -96,7 +99,7 @@ class ProductDetailView(APIView):
 
         # Truyền dữ liệu sang template
         return render(request, 'pages/product_detail.html', {
-            'item': item,
+            # 'item': item,
             'pricing_plan': pricing_plan,
             'images': images,
             'folder_path': folder,  # Truyền folder_path sang template
@@ -156,11 +159,10 @@ class PhotoViewerView(TemplateView):
         if folder_path and os.path.exists(folder_path):
             images = [f for f in os.listdir(folder_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
-            # Gán đường dẫn đến hình ảnh hiện tại
             if image_name in images:
-                current_image_path = f'/static/{folder_path}/{image_name}'  # Thay đổi theo folder_path
+                current_image_path = f'/static/{folder_path}/{image_name}' 
             else:
-                current_image_path = '/static/pictures/default.jpg'  # Ảnh mặc định
+                current_image_path = '/static/pictures/default.jpg' 
 
         # Truyền folder_path và hình ảnh hiện tại vào context
         context['folder_path'] = folder_path 
@@ -169,8 +171,60 @@ class PhotoViewerView(TemplateView):
         return context
 
 def search_plans(request):
-    query = request.GET.get('plan_name', '')  # Lấy giá trị từ ô nhập 'plan_name'
-    results = PricingPlan.objects.filter(plan_name__icontains=query)  # Tìm kiếm không phân biệt chữ hoa
+    query = request.GET.get('plan_name', '').strip()  
 
-    return render(request, 'pages/home.html', {'pricing_plans': results})
+    if query:
+        results = PricingPlan.objects.filter(plan_name__icontains=query)
+    else:
+        results = PricingPlan.objects.none()
 
+    pricing_plans = [
+        {
+            'id': plan.id,  
+            'plan_name': plan.plan_name,  
+            'image': plan.image.url if plan.image else None, 
+        }
+        for plan in results
+    ]
+    
+    return JsonResponse({'pricing_plans': pricing_plans})
+
+
+def subscribe_email(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        email = request.POST.get('email')
+
+        # Lưu vào cơ sở dữ liệu
+        subscription = EmailSubscription(first_name=first_name, email=email)
+        subscription.save()
+
+        # Đường link Google Drive của món quà
+        gift_link = 'https://drive.google.com/file/d/1N8BmRlzUq2nDGhZsei6DTEQ9-nGl4KGq/view?usp=sharing'
+
+        # Gửi email với đường link
+        email_subject = 'Thank You for Subscribing!'
+        email_message = f"""
+        Hello {first_name},
+
+        Thank you for subscribing to our updates. Here is the link to claim your gift:
+        {gift_link}
+
+        We hope you enjoy your gift!
+
+        Best regards,
+        Your Team
+        """
+        
+        send_mail(
+            email_subject,
+            email_message,
+            'welcome@wizpuzzle.com',  # Địa chỉ email gửi
+            [email],
+            fail_silently=False,
+        )
+
+        messages.success(request, 'Đăng ký thành công! Kiểm tra email của bạn để nhận quà.')
+        return render(request, 'pages/home.html')  # Chuyển hướng sau khi đăng ký thành công
+
+    return render(request, 'pages/home.html')

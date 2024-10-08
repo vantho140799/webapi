@@ -2,7 +2,7 @@
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import AccountInfoView, CategoryViewSet, ItemViewSet, LoginPageView, PhotoViewerView, PricingPlanByCategoryViewSet, ReviewViewSet,   index, FeatureViewSet, PricingPlanViewSet, ProductDetailView, search_plans
+from .views import AccountInfoView, CategoryViewSet, ItemViewSet, LoginPageView, PhotoViewerView, PricingPlanByCategoryViewSet, ReviewViewSet,   index, FeatureViewSet, PricingPlanViewSet, ProductDetailView, search_plans, subscribe_email
 from .views import LoginView, RegisterView
 
 router = DefaultRouter()
@@ -24,4 +24,7 @@ urlpatterns = [
     path('photo-viewer/', PhotoViewerView.as_view(), name='photo_viewer'),
     path('search/', search_plans, name='search_plans'),
     path('reviews/', ReviewViewSet.as_view({'get': 'review_list'}), name='review_list'),
+    # path('subscribe/', subscribe_email, name='subscribe_email'),
+    path('', subscribe_email, name='index'),  # Trang chủ sử dụng view `subscribe_email`
+    path('subscribe/', subscribe_email, name='subscribe_email'),
 ]

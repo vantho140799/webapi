@@ -401,17 +401,88 @@
     object-fit: cover; /* Giữ tỉ lệ và cắt video để vừa với khung */
     border-radius: 15px;
 }
+body {
+    font-family: Arial, sans-serif;
+}
+
+.share-section {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: #f1dcdc;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; /* Giữa trang */
+}
+
+.share-container {
+    display: flex;
+    justify-content: space-between; /* Giãn cách giữa các mục */
+    flex-wrap: wrap;
+    gap: 15px; /* Khoảng cách giữa các phần tử */
+}
+
+.share-item {
+    flex: 1 1 200px; /* Sử dụng flex để tạo chiều rộng linh hoạt */
+    background-color: transparent;
+    padding: 10px; 
+    transition: transform 0.3s, box-shadow 0.3s; 
+}
+
+.share-item:hover {
+    transform: translateY(-5px); 
+}
+
+.share-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px; 
+}
+
+.share-item p {
+    margin: 8px 0;
+    color: #333; 
+}
+
+.share-item p:last-child {
+    font-weight: bold;
+    font-style: italic; 
+    color: #555; 
+}
+.share-section h2 {
+    color: #4b3838;
+    font-size: 24px; 
+    margin-bottom: 20px; 
+    font-weight: bold; 
+}
+.coloring-books {
+    text-align: center;
+    padding: 10px;
+}
+
+.books-container {
+    position: relative;
+}
+
+.books-container {
+    width: 100%; 
+}
+
+.coloring-image {
+    width: 100%; 
+    height: auto; 
+}
 </style>
 
 <div class="container">
     <!-- Search Section -->
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form action="{% url 'search_plans' %}" method="get" class="input-group my-4"> 
-                <input style="border-radius: 25px;" type="text" name="plan_name" class="form-control" placeholder="Enter book title..." required>
-            </form>
+        <div class="col-12 col-md-8"> 
+            <div class="input-group mb-3">
+                <input style="border-radius: 20px; width: 100%;" type="text" class="form-control" id="plan-name-input" placeholder="Search..." aria-label="Search">
+            </div>
         </div>
     </div>
+    
 
     <!-- Content Section -->
     <section id="home-content" class="row">
@@ -428,12 +499,16 @@
         </aside>
 
         <section id="pricing" class="col-12 col-md-9">
+            <!-- Pricing Search Section -->
+            
+        
             <!-- Pricing Section -->
             <div class="row" id="pricing-container">
                 <!-- Dynamic Pricing Items -->
                 <!-- Pricing items sẽ được thêm vào đây bởi JavaScript -->
             </div>
         </section>
+        
     </section>
 
     <!-- View All Button -->
@@ -456,12 +531,18 @@
     </section>
 
     <hr>
+    <section class="coloring-books">
+        <div class="books-container">
+            <img src="/static/pictures/banner.jpg" alt="Coloring Books" class="coloring-image">
+        </div>
+    </section>
+    <hr>
     <div class="intro-section text-center">
         <h2>Hi Friend!</h2>
         <p>
             We craft these coloring books to offer comfort and relaxation to people like us. We may feel overwhelmed, restless, and anxious at times, but when we sit down with something as simple and calming as these pages, we're reminded that the smallest moments can ground us in life. Hand-drawn with love and care, designed to create a soothing experience, these books are enjoyed gently, helping you find a cozy moment in every little detail.
         </p>
-        <a href="#" class="btn btn-primary">Atc</a>
+        <a href="#" class="btn btn-primary">Meet Atc</a>
     </div>
     
     <div class="video-section">
@@ -473,21 +554,45 @@
     
     <!-- Email Subscription Section -->
     <section id="email" class="text-center my-5">
-        <h4 style="color: #000;">Rating · 4.9 out of 5 · 400+ Reviews</h4>
-        <div class="card p-4 mx-auto" style="max-width: 600px; background-color: #198754;">
+        <h4 style="color: #000;">Treat your inbox to a lovely surprise! Sign up now for exclusive content and special gifts.</h4>
+        <div class="card p-4 mx-auto" style="max-width: 600px; background-color: #00aa6c;">
             <h3 style="color: #ffffff;">Get Email Updates on New Releases</h3>
-            <form action="" method="post" class="form-vertical my-3"> <!-- Sử dụng URL động -->
-                {% csrf_token %} <!-- Bảo vệ CSRF -->
+            <form action="{% url 'subscribe_email' %}" method="post" class="form-vertical my-3">
+                {% csrf_token %}
                 <input type="text" name="first_name" class="form-control mb-3" placeholder="First name..." required>
                 <input type="email" name="email" class="form-control mb-3" placeholder="Email..." required>
-                <button style="background-color: #d82424; border-radius: 0px;" type="submit"
-                    class="btn btn-primary btn-block">Subscribe</button>
+                <button style="background-color: #d82424; border-radius: 25px;" type="submit" class="btn btn-primary btn-block">Subscribe</button>
             </form>
             <p style="color: #ffffff;" class="small">We respect your privacy. Unsubscribe at any time.</p>
         </div>
     </section>
 
     <hr>
+    <section id="share-with-us" class="share-section">
+        <h2>❤️ Share with us ❤️</h2>
+        <div class="share-container">
+            <div class="share-item">
+                <img src="/static/pictures/a1.jpg" alt="Customer 1">
+                <p>"I have fallen IN LOVE with these coloring books! Each one is better than the one before. Now this Halloween themed Spooky Cutie makes ghost, ghouls, and all things eerie come to life with your favorite markers or colored pencils.Really enjoying this one and I will probably buy another one before Halloween."</p>
+                <p>Amazon customer</p>
+            </div>
+            <div class="share-item">
+                <img src="/static/pictures/a2.jpg" alt="Customer 2">
+                <p>"Love this colouring book so much!! So many cute designs! Definitely recommend"</p>
+                <p>Etsy customer</p>
+            </div>
+            <div class="share-item">
+                <img src="/static/pictures/a3.jpg" alt="Customer 3">
+                <p>"I never take the time to write reviews, so me doing it for this item says a lot! Before, coloring, but actually give me anxiety. Too many small/ fine lines . But I truly love the bold , simple, yet cute designs! Looking forward to purchasing other coloring books from them!"</p>
+                <p>Amazon customer</p>
+            </div>
+            <!-- <div class="share-item">
+                <img src="path/to/image4.jpg" alt="Customer 4">
+                <p>"I've always loved coloring books but found the adult ones too overwhelming and the kids one way too childish for my liking but this one is perfect! it is full of bold pictures that are cute and not overwhelming to color! this is my second coloring book that i get from this seller & i plan on getting more, definitely my favorites!"</p>
+                <p>Amazon customer</p>
+            </div> -->
+        </div>
+    </section>
 </div>
 
 {% endblock %}
@@ -556,6 +661,7 @@
                     <div class="pricing-item">
                         <a href="/product/${plan.id}/">
                             <img id="product-image" src="${imageUrl}" alt="${plan.plan_name}">
+                            <h5>${plan.plan_name}</h5>
                         </a>
                     </div>
                 `;
@@ -575,6 +681,7 @@
                     <div class="pricing-item">
                         <a href="/product/${plan.id}/">
                             <img id="product-image" src="${imageUrl}" alt="${plan.plan_name}">
+                            <h5>${plan.plan_name}</h5>
                         </a>
                     </div>
                 `;
@@ -595,5 +702,57 @@
         });
     });
 </script>
+<script>
+    // Lắng nghe sự kiện keyup trên trường nhập liệu
+    document.getElementById('plan-name-input').addEventListener('keyup', function(event) {
+        // Kiểm tra nếu phím Enter được nhấn
+        if (event.key === 'Enter') {
+            const query = document.getElementById('plan-name-input').value;
 
+            // Gửi yêu cầu đến view search_plans
+            fetch(`/search?plan_name=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const pricingContainer = document.getElementById('pricing-container');
+                    pricingContainer.innerHTML = ''; // Xóa nội dung cũ
+
+                    // Kiểm tra xem có kết quả nào không
+                    if (data.pricing_plans.length > 0) {
+                        data.pricing_plans.forEach(plan => {
+                            const item = document.createElement('div');
+                            item.className = 'col-12 col-md-6 pricing-item'; // Thay đổi lớp theo nhu cầu của bạn
+                            item.innerHTML = `
+                                <div class="pricing-card">
+                                    ${plan.image ? `<img src="${plan.image}" alt="${plan.description}" style="width: 100%; height: 400px;" />` : ''}
+                                </div>
+                            `;
+                            pricingContainer.appendChild(item);
+                        });
+                    } else {
+                        pricingContainer.innerHTML = '<p>Không tìm thấy kế hoạch nào.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Có lỗi xảy ra:', error);
+                    const pricingContainer = document.getElementById('pricing-container');
+                    pricingContainer.innerHTML = '<p>Đã xảy ra lỗi trong quá trình tìm kiếm.</p>';
+                });
+        }
+    });
+</script>
+
+<script>
+    document.getElementById("plan-name-input").addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            // Gọi hàm tìm kiếm khi nhấn Enter
+            searchPlans();
+        }
+    });
+
+    function searchPlans() {
+        var planName = document.getElementById("plan-name-input").value;
+        console.log("Tìm kiếm kế hoạch: " + planName);
+        // Thực hiện các thao tác tìm kiếm tại đây, như gửi yêu cầu AJAX chẳng hạn
+    }
+</script>
 {% endblock %}
